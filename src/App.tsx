@@ -26,6 +26,7 @@ import AddIcon from '@mui/icons-material/Add';
 import TodayIcon from '@mui/icons-material/Today';
 import HistoryIcon from '@mui/icons-material/History';
 import BarChartIcon from '@mui/icons-material/BarChart';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import dayjs from 'dayjs';
 import { DailyRecord, loadRecords, saveRecords } from './lib/storage';
 
@@ -61,6 +62,25 @@ export default function App() {
       } else {
         next[index] = { ...next[index], sets: [...next[index].sets, reps] };
       }
+      saveRecords(next);
+      return next;
+    });
+  };
+
+  const removeTodaySet = (setIndex: number) => {
+    setRecords((current) => {
+      const index = current.findIndex((record) => record.date === today);
+      if (index === -1) return current;
+
+      const next = [...current];
+      const updatedSets = next[index].sets.filter((_, idx) => idx !== setIndex);
+
+      if (updatedSets.length === 0) {
+        next.splice(index, 1);
+      } else {
+        next[index] = { ...next[index], sets: updatedSets };
+      }
+
       saveRecords(next);
       return next;
     });
@@ -123,7 +143,19 @@ export default function App() {
                     </ListItem>
                   )}
                   {todayRecord.sets.map((set, index) => (
-                    <ListItem key={`${set}-${index}`}>
+                    <ListItem
+                      key={`${set}-${index}`}
+                      secondaryAction={
+                        <Button
+                          color="error"
+                          size="small"
+                          startIcon={<DeleteOutlineIcon />}
+                          onClick={() => removeTodaySet(index)}
+                        >
+                          Удалить
+                        </Button>
+                      }
+                    >
                       <ListItemText primary={`Подход ${index + 1}`} secondary={`${set} повторений`} />
                     </ListItem>
                   ))}
