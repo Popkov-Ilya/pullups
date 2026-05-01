@@ -21,6 +21,8 @@ import {
   Toolbar,
   Typography,
   Button,
+  IconButton,
+  Tooltip,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import TodayIcon from '@mui/icons-material/Today';
@@ -146,14 +148,16 @@ export default function App() {
                     <ListItem
                       key={`${set}-${index}`}
                       secondaryAction={
-                        <Button
-                          color="error"
-                          size="small"
-                          startIcon={<DeleteOutlineIcon />}
-                          onClick={() => removeTodaySet(index)}
-                        >
-                          Удалить
-                        </Button>
+                        <Tooltip title="Удалить подход" arrow>
+                          <IconButton
+                            size="small"
+                            onClick={() => removeTodaySet(index)}
+                            aria-label="Удалить подход"
+                            sx={{ color: 'text.secondary' }}
+                          >
+                            <DeleteOutlineIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
                       }
                     >
                       <ListItemText primary={`Подход ${index + 1}`} secondary={`${set} повторений`} />
